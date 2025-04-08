@@ -13,6 +13,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/davecgh/go-spew/spew"
 	"github.com/juju/loggo"
 
 	"github.com/hemilabs/heminetwork/config"
@@ -66,6 +67,15 @@ func HandleSignals(ctx context.Context, cancel context.CancelFunc, callback func
 	os.Exit(2)
 }
 
+func sink(ctx context.Context, ms []hoarder.Measurement) error {
+	log.Infof("sink")
+	defer log.Infof("sink exit")
+
+	log.Infof("%v", spew.Sdump(ms))
+
+	return nil
+}
+
 func _main() error {
 	// Parse configuration from environment
 	if err := config.Parse(cm); err != nil {
@@ -91,7 +101,7 @@ func _main() error {
 		return fmt.Errorf("create hoarder server: %w", err)
 	}
 
-	if err := server.Run(ctx); !errors.Is(err, context.Canceled) {
+	if err := server.Run(ctx, sink); !errors.Is(err, context.Canceled) {
 		return fmt.Errorf("hoarder server terminated: %w", err)
 	}
 
