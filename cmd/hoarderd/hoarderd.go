@@ -17,13 +17,14 @@ import (
 	"github.com/juju/loggo"
 
 	"github.com/hemilabs/heminetwork/config"
+
 	"github.com/marcopeereboom/hoarder/service/hoarder"
 	"github.com/marcopeereboom/hoarder/version"
 )
 
 const (
 	daemonName      = "hoarderd"
-	defaultLogLevel = daemonName + "=INFO;hoarder=INFO;level=INFO"
+	defaultLogLevel = daemonName + "=INFO;hoarder=INFO"
 )
 
 var (
@@ -60,8 +61,8 @@ func HandleSignals(ctx context.Context, cancel context.CancelFunc, callback func
 	case s := <-signalChan: // First signal, cancel context.
 		if callback != nil {
 			callback(s) // Do whatever caller wants first.
-			cancel()
 		}
+		cancel()
 	}
 	<-signalChan // Second signal, hard exit.
 	os.Exit(2)
