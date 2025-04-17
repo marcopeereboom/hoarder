@@ -184,9 +184,9 @@ func (s *Server) run(ctx context.Context) error {
 		case <-ctx.Done():
 			return ctx.Err()
 		case <-ticker.C:
-			log.Infof("tick")
-
 			ts := time.Now().Unix()
+			log.Debugf("tick %v", ts)
+
 			ms := make([]Measurement, 0, len(s.cfg.Subsystems))
 			for k := range s.cfg.Subsystems {
 				var (
